@@ -50,7 +50,7 @@ class QueryServiceImpl : public QueryService {
     response->set_res_info("OK");
     response->set_req_no(request->req_no());
     response->set_id(request->id());
-    response->set_age(100100111);
+    response->set_age(20020420);
 
     g_cor_mutex.lock();
     AppDebugLog("begin i = %d", i);

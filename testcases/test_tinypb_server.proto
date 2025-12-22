@@ -28,7 +28,6 @@ message queryNameRes {
   string name = 5;
 }
 
-
 service QueryService {
   // rpc method name
   rpc query_name(queryNameReq) returns (queryNameRes);

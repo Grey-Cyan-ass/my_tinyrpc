@@ -35,8 +35,8 @@ extern tinyrpc::Logger::ptr gRpcLogger;
 extern tinyrpc::Config::ptr gRpcConfig;
 
 
-static std::atomic_int64_t g_rpc_log_index {0};
-static std::atomic_int64_t g_app_log_index {0};
+//static std::atomic_int64_t g_rpc_log_index {0};
+//static std::atomic_int64_t g_app_log_index {0};
 
 void CoredumpHandler(int signal_no) {
   ErrorLog << "progress received invalid signal, will exit";

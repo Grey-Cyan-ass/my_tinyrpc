@@ -1,10 +1,11 @@
 #ifndef TINYRPC_COMM_CONFIG_H
 #define TINYRPC_COMM_CONFIG_H
 
+#include <tinyxml.h>
 #include <string>
 #include <memory>
 #include <map>
-#include <tinyxml/tinyxml.h>
+
 
 #ifdef DECLARE_MYSQL_PLUGIN
 #include "tinyrpc/comm/mysql_instase.h"

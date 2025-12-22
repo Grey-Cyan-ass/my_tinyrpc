@@ -6,7 +6,7 @@
 #include "tinyrpc/comm/log.h"
 #include "tinyrpc/net/tcp/tcp_server.h"
 #include "tinyrpc/net/net_address.h"
-#include <tinyxml/tinyxml.h>
+#include <tinyxml.h>
 
 
 

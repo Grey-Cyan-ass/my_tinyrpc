@@ -80,6 +80,10 @@ trap cleanup EXIT
 #Set up external repository and install C Connector
 check_packages libmariadb3 libmariadb-dev
 
+# ----------------- 新增这一行 -----------------
+echo "Basic MariaDB libs installed. Skipping extra C++ connector download."
+exit 0
+
 #Depending on the OS, install different C++ connectors
 find_os_props
 

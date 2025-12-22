@@ -1,26 +1,42 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the
-// README at: https://github.com/devcontainers/templates/tree/main/src/cpp-mariadb
 {
-	"name": "TinyRPC",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
-	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-	"features": {
-		// "ghcr.io/devcontainers-contrib/features/protoc-asdf:1":{},
-		// "ghcr.io/balazs23/devcontainers-features/bazel:1":{},
-		"ghcr.io/devcontainers-contrib/features/apt-get-packages:1": {}
-	}
+    "name": "TinyRPC",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "features": {},
 
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "llvm-vs-code-extensions.vscode-clangd",
+                "ms-vscode.cpptools", 
+                "ms-vscode.cmake-tools",
+                "twxs.cmake"
+            ],
+            "settings": {
+                // [关键修复] 强制指定 clangd 在 Linux 容器内的路径，防止它去读 Windows 路径
+                "clangd.path": "/usr/bin/clangd",
 
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// This is the recommended way to access the container from the host
-	// "forwardPorts": [3306],
+                // 禁用微软插件的智能提示，防止冲突
+                "C_Cpp.intelliSenseEngine": "disabled",
+                
+                // clangd 的启动参数
+                "clangd.arguments": [
+                    // 告诉它编译数据库在哪里
+                    "--compile-commands-dir=${workspaceFolder}/build", 
+                    "--background-index",
+                    "--completion-style=detailed",
+                    "--header-insertion=never",
+                    "--log=verbose"
+                ],
+                "terminal.integrated.defaultProfile.linux": "bash"
+            }
+        }
+    },
 
-	// Configure tool-specific properties.
-	// "customizations": {},
-
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+    "capAdd": [ "SYS_PTRACE" ],
+    "securityOpt": [ "seccomp=unconfined" ],
+    "runArgs": [ "--network=host" ],
+    "remoteUser": "vscode"
 }

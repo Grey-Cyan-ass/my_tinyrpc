@@ -1,36 +1,23 @@
 FROM mcr.microsoft.com/devcontainers/cpp:0-debian-11
 
-# Everything below this is needed for installing MariaDB
-# Instructions are copied and modified from: https://mariadb.com/docs/clients/mariadb-connectors/connector-cpp/install/
+# 1. 换源：使用阿里云镜像源 (速度快)
+RUN sed -i 's/deb.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list && \
+    sed -i 's/security.debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list
+
+# 2. 安装所有依赖 (包括 Clangd)
+#    注意：删除了所有 COPY xxx.sh 的命令，全部改用 apt 安装，稳定且不会缺文件
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install curl
+    && apt-get -y install --no-install-recommends \
+    curl \
+    build-essential \
+    git \
+    gdb \
+    cmake \
+    protobuf-compiler \
+    libprotobuf-dev \
+    libtinyxml-dev \
+    clangd \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY ./install-mariadb.sh /tmp/
-RUN chmod +x /tmp/install-mariadb.sh && /tmp/install-mariadb.sh && rm -f /tmp/install-mariadb.sh
-
-ARG REINSTALL_CMAKE_VERSION_FROM_SOURCE="3.21.5"
-
-# Optionally install the cmake for vcpkg
-COPY ./reinstall-cmake.sh /tmp/
-
-RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
-        chmod +x /tmp/reinstall-cmake.sh && /tmp/reinstall-cmake.sh ${REINSTALL_CMAKE_VERSION_FROM_SOURCE}; \
-    fi \
-    && rm -f /tmp/reinstall-cmake.sh
-
-# [Optional] Uncomment this section to install additional vcpkg ports.
-# RUN su vscode -c "${VCPKG_ROOT}/vcpkg install <your-port-name-here>"
-
-# [Optional] Uncomment this section to install additional packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
-
-# install google protobuf
-ARG PROTOBUF_BRANCH="3.19.x"
-COPY ./install-protobuf.sh /tmp/
-RUN chmod +x /tmp/install-protobuf.sh && /tmp/install-protobuf.sh && rm -f /tmp/install-protobuf.sh
-
-# install tiny xml
-ARG NUM_COMPILE_JOBS="3"
-COPY ./tinyxml.sh /tmp/
-RUN chmod +x /tmp/tinyxml.sh && /tmp/tinyxml.sh && rm -f /tmp/tinyxml.sh
+# 3. 设置用户
+USER vscode
