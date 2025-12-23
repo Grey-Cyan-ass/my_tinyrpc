@@ -1,0 +1,42 @@
+{
+    "name": "TinyRPC",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "features": {},
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "llvm-vs-code-extensions.vscode-clangd",
+                "ms-vscode.cpptools", 
+                "ms-vscode.cmake-tools",
+                "twxs.cmake"
+            ],
+            "settings": {
+                // [关键修复] 强制指定 clangd 在 Linux 容器内的路径，防止它去读 Windows 路径
+                "clangd.path": "/usr/bin/clangd",
+
+                // 禁用微软插件的智能提示，防止冲突
+                "C_Cpp.intelliSenseEngine": "disabled",
+                
+                // clangd 的启动参数
+                "clangd.arguments": [
+                    // 告诉它编译数据库在哪里
+                    "--compile-commands-dir=${workspaceFolder}/build", 
+                    "--background-index",
+                    "--completion-style=detailed",
+                    "--header-insertion=never",
+                    "--log=verbose"
+                ],
+                "terminal.integrated.defaultProfile.linux": "bash"
+            }
+        }
+    },
+
+    "capAdd": [ "SYS_PTRACE" ],
+    "securityOpt": [ "seccomp=unconfined" ],
+    "runArgs": [ "--network=host" ],
+    "remoteUser": "vscode"
+}
